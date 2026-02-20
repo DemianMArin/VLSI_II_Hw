@@ -1,7 +1,5 @@
 module pri_en_tb();
 
-timeunit 1ns/1ns;
-
 logic [3:0] I;
 logic [1:0] Y;
 

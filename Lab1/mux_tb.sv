@@ -1,7 +1,5 @@
 module mux_tb();
 
-timeunit 1ns/1ns;
-
 logic en;
 logic sel;
 logic [3:0] D0;
