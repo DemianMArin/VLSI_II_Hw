@@ -1,3 +1,5 @@
+// `timescale 1ns/1ns
+
 module mux_tb();
 
 logic en;
@@ -8,10 +10,10 @@ logic [3:0] Y;
 
 mux DUT(.*);
 
-initial begin: fsdb_dump
-  $fsdbDumpfile("dump.fsdb");
-  $fsdbDumpvars;
-end: fsdb_dump
+// initial begin: fsdb_dump
+//   $fsdbDumpfile("dump.fsdb");
+//   $fsdbDumpvars;
+// end: fsdb_dump
 
 initial begin: testbench
   D0 = 4'b0101; D1 = 4'b1101; en = 1; sel = 1;

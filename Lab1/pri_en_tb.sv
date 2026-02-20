@@ -1,3 +1,5 @@
+// `timescale 1ns/1ns
+
 module pri_en_tb();
 
 logic [3:0] I;
@@ -5,10 +7,10 @@ logic [1:0] Y;
 
 pri_en DUT(.*);
 
-initial begin: fsdb_dump
-  $fsdbDumpfile("dump.fsdb");
-  $fsdbDumpvars;
-end: fsdb_dump
+// initial begin: fsdb_dump
+//   $fsdbDumpfile("dump.fsdb");
+//   $fsdbDumpvars;
+// end: fsdb_dump
 
 initial begin: testbench
   I = 4'b0000;
