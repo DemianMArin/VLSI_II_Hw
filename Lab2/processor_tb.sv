@@ -24,12 +24,12 @@ initial begin: testbench
 
   // Initialize all inputs, assert reset
   rstN = 1'b0; data_in = 32'h0; i_data = 32'h0;
-  data_select = 1'b0; status_flags = 16'h0000;
+  data_select = 1'b0; status_flags = 16'hFFFF;
 
   // ----------- Reset on status_reg
-  rstN = 1'b0; status_flags = 16'hFF00;
+  rstN = 1'b0; status_flags = 16'hFFFF;
   @(posedge clk); #1;
-  if (status !== 8'h00) begin
+  if (status !== 8'h60) begin
     $display("@@@FAIL");
     $finish;
   end
@@ -65,13 +65,24 @@ initial begin: testbench
     $display("@@@FAIL");
     $finish;
   end
+ 
+  // Value of status should be 60 since a posedge hasn't arrived even if
+  // status_flags has 0xFF at [0:7]
 
-  status_flags = 16'hFF00;
+  status_flags = 16'hFFFF;
   #1;
-  if (Q !== 3'd7) begin
+  if (Q !== 3'd7 || status != 8'h60) begin
     $display("@@@FAIL");
     $finish;
   end
+
+  // Pos edge has arrived. Q should not change. But status should be updated.
+  @(posedge clk)#1 
+  if (Q !== 3'd7 || status != 8'hFF) begin
+    $display("@@@FAIL");
+    $finish;
+  end
+
 
   status_flags = 16'h0F00;
   #1;

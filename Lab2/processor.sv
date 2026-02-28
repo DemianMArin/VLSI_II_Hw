@@ -24,7 +24,7 @@ module status_reg(
 
   always_ff @(posedge clk) begin
     if (!rstN)
-      status <= 8'h00;
+      status <= 8'h60;
     else
       status <= {int_en, 1'b1, 1'b1, zero, carry, neg, parity};
   end
