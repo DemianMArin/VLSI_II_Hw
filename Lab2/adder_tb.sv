@@ -6,7 +6,7 @@ logic        cin;
 logic [15:0] s;
 logic        cout;
 
-rtl_16bit_adder DUT(.*)
+rtl_16bit_adder DUT(.*);
 
 initial begin: fsdb_dump
   $fsdbDumpfile("dump.fsdb");
