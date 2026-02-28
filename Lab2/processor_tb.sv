@@ -15,10 +15,10 @@ processor DUT(.*);
 initial clk = 0;
 always #5 clk = ~clk;
 
-initial begin: fsdb_dump
-  $fsdbDumpfile("dump.fsdb");
-  $fsdbDumpvars;
-end: fsdb_dump
+// initial begin: fsdb_dump
+//   $fsdbDumpfile("dump.fsdb");
+//   $fsdbDumpvars;
+// end: fsdb_dump
 
 initial begin: testbench
 

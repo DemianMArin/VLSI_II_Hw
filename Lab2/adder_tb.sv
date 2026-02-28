@@ -8,10 +8,10 @@ logic        cout;
 
 rtl_16bit_adder DUT(.*);
 
-initial begin: fsdb_dump
-  $fsdbDumpfile("dump.fsdb");
-  $fsdbDumpvars;
-end: fsdb_dump
+// initial begin: fsdb_dump
+//   $fsdbDumpfile("dump.fsdb");
+//   $fsdbDumpvars;
+// end: fsdb_dump
 
 initial begin: testbench
 
