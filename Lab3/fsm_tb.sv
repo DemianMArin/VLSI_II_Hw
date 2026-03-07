@@ -16,6 +16,11 @@ module fsm_tb;
     @(posedge clk); #1;
   endtask
 
+// initial begin: fsdb_dump
+//   $fsdbDumpfile("dump.fsdb");
+//   $fsdbDumpvars;
+// end: fsdb_dump
+
   initial begin: testbench
 
     // Initialize with reset asserted
