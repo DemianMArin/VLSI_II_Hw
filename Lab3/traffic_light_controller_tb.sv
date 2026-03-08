@@ -12,10 +12,10 @@ module traffic_light_controller_tb;
   localparam YELLOW = 2'b01;
   localparam GREEN  = 2'b10;
 
-  initial begin: fsdb_dump
-    $fsdbDumpfile("dump.fsdb");
-    $fsdbDumpvars;
-  end: fsdb_dump
+  // initial begin: fsdb_dump
+  //   $fsdbDumpfile("dump.fsdb");
+  //   $fsdbDumpvars;
+  // end: fsdb_dump
 
   initial begin: testbench
 
