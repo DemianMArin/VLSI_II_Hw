@@ -1,0 +1,135 @@
+\section*{Solution}
+
+\subsection*{Part (b) — Width of $M_3$/$M_4$ and Mixer Conversion Gain}
+
+% -------------------------------------------------------
+\paragraph{What is an IF component?}
+
+This circuit is a heterodyne receiver.  $M_1$ amplifies the RF signal at
+$f_\text{RF} = 5.20\,\text{GHz}$.  The mixer ($M_2$, $M_3$, $M_4$) then
+\emph{down-converts} it to the intermediate frequency
+\[
+  f_\text{IF} = f_\text{RF} - f_\text{LO} = 5.20 - 5.13 = 70\,\text{MHz}.
+\]
+When a product $i_{d2}(t) = G_{m2}\,V_\text{rf}\cos(\omega_\text{RF}t)$ is
+multiplied by the LO switching function $s(t)$ at $\omega_\text{LO}$, the
+output spectrum contains components at
+$|m\,f_\text{LO} \pm n\,f_\text{RF}|$ for non-negative integers $m,n$.
+The \textbf{IF component} is the spectral line at $f_\text{IF} = 70\,\text{MHz}$
+--- the down-converted replica of the RF signal that all subsequent baseband
+processing acts on.  All other mixing products (at $f_\text{RF}+f_\text{LO}$,
+$3f_\text{LO}\pm f_\text{RF}$, etc.) are filtered by the IF selectivity.
+
+% -------------------------------------------------------
+\paragraph{How the switching mixer produces the IF component.}
+
+$M_2$ acts as a \emph{transconductor}: it converts the RF voltage at its gate
+to a tail drain current $i_\text{tail}(t) = G_{m2}\,v_\text{rf}(t)$.
+$M_3$ and $M_4$ form a \emph{current-commutating pair}: driven
+differentially by $V_\text{LO}$, they steer $i_\text{tail}$ alternately
+between the two 900\,$\Omega$ load branches at the LO rate.  When the LO
+amplitude is large enough to switch $M_{3}$/$M_4$ \emph{completely} every
+half-cycle (\textbf{hard switching}), the differential steering function is
+a unit-amplitude square wave:
+\[
+  s(t) = \frac{4}{\pi}\!\left[\cos(\omega_\text{LO}t)
+         - \tfrac{1}{3}\cos(3\omega_\text{LO}t) + \cdots\right].
+\]
+The differential IF output current is $\Delta i_\text{out} = s(t)\cdot i_\text{tail}(t)$.
+Picking only the term at $\omega_\text{IF} = \omega_\text{RF}-\omega_\text{LO}$:
+\[
+  \Delta I_\text{IF} = \frac{2}{\pi}\,G_{m2}\,V_\text{rf},
+  \qquad\Rightarrow\qquad
+  V_\text{IF} = \frac{2}{\pi}\,G_{m2}\,V_\text{rf}\cdot R_L,
+\]
+where $R_L = 900\,\Omega$.  With $V_\text{rf} = V_\text{in}/2$
+(the RF voltage at $M_2$'s gate referenced to the source), the
+\textbf{voltage conversion gain of the mixer} is
+\begin{equation}\label{eq:CG}
+  \boxed{C_V = \frac{V_\text{IF}}{V_\text{in}/2}
+             = \frac{2}{\pi}\,G_{m2}\,R_L.}
+\end{equation}
+The factor $2/\pi\approx 0.64$ is the fundamental Fourier coefficient of the
+square-wave switching function and is the \emph{maximum possible} switching
+efficiency.  It is only realized under hard switching.
+
+% -------------------------------------------------------
+\paragraph{Why the width of $M_3$/$M_4$ sets the conversion gain.}
+
+$M_3$ and $M_4$ are a differential pair with tail current $I_{SS} = 0.15\,\text{mA}$
+supplied by $M_2$.  At their quiescent point each carries $I_{SS}/2$, so
+their overdrive voltage is
+\[
+  V_\text{GS,eff,Q}
+    = \sqrt{\frac{I_{SS}}{\mu_n C_\text{ox}\,(W_{34}/L)}}.
+\]
+For a square-law differential pair the complete-switching condition is
+(derivable from $\Delta I_D = 0$ for the off transistor):
+\begin{equation}\label{eq:hs}
+  V_\text{LO,peak} \;\geq\; \sqrt{2}\,V_\text{GS,eff,Q}
+    = \sqrt{\frac{2\,I_{SS}}{\mu_n C_\text{ox}\,(W_{34}/L)}}.
+\end{equation}
+\begin{itemize}
+  \item \textbf{If $W_{34}$ is too small}: $V_\text{GS,eff,Q}$ is large,
+    condition~\eqref{eq:hs} fails, $M_3$/$M_4$ never fully switch off, and
+    some tail current recirculates rather than being steered to the output.
+    The effective switching factor drops below $2/\pi$ and $C_V$ is
+    \emph{below its maximum}.
+  \item \textbf{If $W_{34}$ satisfies condition~\eqref{eq:hs}}: hard
+    switching is achieved and $C_V = (2/\pi)\,G_{m2}\,R_L$, its maximum.
+    Making $W_{34}$ larger than this threshold does not further increase
+    $C_V$ (it only adds unnecessary parasitic capacitance at the IF output
+    node).
+\end{itemize}
+Therefore, \textbf{maximum conversion gain is achieved at the minimum $W_{34}$
+that satisfies the hard-switching condition} with the given LO amplitude.
+
+% -------------------------------------------------------
+\paragraph{Finding $W_{34}$.}
+
+Set $V_\text{LO,peak} = \sqrt{2}\,V_\text{GS,eff,Q}$ and solve for $W_{34}$:
+\[
+  V_\text{LO,peak}^2 = \frac{2\,I_{SS}\,L}{\mu_n C_\text{ox}\,W_{34}}
+  \quad\Longrightarrow\quad
+  \boxed{W_{34} = \frac{2\,I_{SS}\,L}{\mu_n C_\text{ox}\,V_\text{LO,peak}^2}.}
+\]
+The LO is specified as a peak-to-peak \emph{differential} amplitude of
+$0.9\,\text{V}$, so the differential peak is
+$V_\text{LO,peak} = 0.9/2 = 0.45\,\text{V}$.
+Substituting $I_{SS} = 0.15\,\text{mA}$, $L = 0.18\,\mu\text{m}$, and
+$\mu_n C_\text{ox} = 270\,\mu\text{A/V}^2$:
+\[
+  W_{34}
+    = \frac{2\times0.15\times10^{-3}\times0.18\times10^{-6}}
+           {270\times10^{-6}\times(0.45)^2}
+    = \frac{5.4\times10^{-11}}{5.47\times10^{-8}}
+    \approx \mathbf{1\,\mu\text{m}}.
+\]
+
+% -------------------------------------------------------
+\paragraph{Conversion gain under this condition.}
+
+With hard switching established, equation~\eqref{eq:CG} applies directly.
+$G_{m2}$ is the effective RF transconductance of $M_2$.  Its source is
+degenerated by the parallel combination of $10\,\text{k}\Omega$ and
+$0.25\,\text{pF}$; at $f_\text{RF} = 5.2\,\text{GHz}$ the capacitor dominates
+($Z_{0.25\,\text{pF}} \approx 122\,\Omega \ll 10\,\text{k}\Omega$), so
+\[
+  G_{m2} = \frac{g_{m2}}{1 + g_{m2}\,Z_s},
+  \quad Z_s = \frac{1}{j\,2\pi\,f_\text{RF}\times 0.25\,\text{pF}}
+              \approx -j\,122\,\Omega,
+\]
+with the intrinsic transconductance
+\[
+  g_{m2} = \sqrt{2\,\mu_n C_\text{ox}\,\frac{W_2}{L}\,I_{D2}}
+          = \sqrt{2\times270\times10^{-6}\times\frac{W_2}{0.18\times10^{-6}}
+                  \times0.15\times10^{-3}},
+\]
+where $W_2$ is obtained from part~(a).  The voltage conversion gain is then
+\[
+  \boxed{C_V = \frac{2}{\pi}\,
+               \frac{g_{m2}}{\left|1+g_{m2}\cdot(-j122\,\Omega)\right|}
+               \times 900\,\Omega.}
+\]
+If source degeneration at RF is neglected ($g_{m2}\times122\,\Omega\ll1$),
+this simplifies to $C_V \approx (2/\pi)\,g_{m2}\times900$.

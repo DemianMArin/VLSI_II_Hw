@@ -1,0 +1,8 @@
+I've obtained this expression from a qpss simulaiton in cadence. I swept the width of transistors M3 and M4 in the image above. To find out the Width that gives me the maximum voltage at V_IF. The expression I got in cadence is this:
+```
+(vh('qpss "/net2" '((1 -1))) / vh('qpss "/net8" '((1 0))))
+```
+The graph as you can see from images I got a maximum gain at around 100 width. The problem is that I'd like to obtain it directly from the points using the calculator. The problem is that when I input this value into the calculator in cadence and try to use ymax I get this error:
+```
+ERROR (VIVA-3002):expression evaluation failed: ymax((vh('qpss "/net2" '((1 -1))) / vh('qpss "/net8" '((1 0)))))
+```
