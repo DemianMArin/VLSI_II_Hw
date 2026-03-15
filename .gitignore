@@ -1,4 +1,3 @@
-Hw1/
 csrc/  
 dump.fsdb  
 novas_dump.log  
@@ -10,3 +9,7 @@ help_commands.txt
 Lab2/*.txt
 Lab3/*.txt
 *.swp
+Hw2/*.txt
+*.synctex.gz.sum.synctex
+*.synctex.gz
+*.log

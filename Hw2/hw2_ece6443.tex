@@ -14,6 +14,188 @@
 
 	\maketitle
 
+  \section*{Problem 1. Finding input capacitances}
 
+  The cadence simulations for the input capacitances can be seen in Figure \ref{fig:p1_inputCapacitance}. The resulting load capacitances are calculated and shown in Table \ref{tab:p1_inputCapacitances}.
+
+  \begin{table}[H]
+    \centering
+    \caption{Input Capacitances for Various Logic Styles}
+    \begin{tabular}{lcc}
+      \hline
+      Logic Style & $C_{in}$ & $C_{load}$ \\
+      \hline
+      Static CMOS    & 525 aF & 2.1 fF  \\
+      N-P Cascaded   & 525 aF & 0.12 fF \\
+      Domino Logic   & 525 aF & 1.2 fF  \\
+      \hline
+    \end{tabular}
+    \label{tab:p1_inputCapacitances}
+  \end{table}
+
+  \begin{figure}[H]
+		\includegraphics[width=0.45\linewidth]{Images/InputCapacitanceStaticSch.png} \\
+		\includegraphics[width=0.45\linewidth]{Images/InputCapacitanceDynamicGraph.png}
+		\includegraphics[width=0.45\linewidth]{Images/InputCapacitanceDynamicSch.png} \\
+		\includegraphics[width=0.45\linewidth]{Images/InputCapacitanceDominoGraph.png} 
+		\includegraphics[width=0.45\linewidth]{Images/InputCapacitanceDominoSch.png}
+
+    \caption{Input Capacitance calculation \label{fig:p1_inputCapacitance}}
+	\end{figure}
+
+  \section*{Problem 1. Comparing Different Types of Logic}
+
+  \begin{figure}[H]
+    \centering
+		\includegraphics[width=0.95\linewidth]{Images/StaticCadence.png}
+    \caption{Transient Simulation Static CMOS \label{fig:p1_staticCadence}}
+	\end{figure}
+
+  \begin{figure}[H]
+    \centering
+		\includegraphics[width=0.95\linewidth]{Images/DynamicCadence.png}
+    \caption{Transient Simulation N-P Cascaded Dynamic \label{fig:p1_dynamicCadence}}
+	\end{figure}
+
+  \begin{figure}[H]
+    \centering
+		\includegraphics[width=0.95\linewidth]{Images/DominoCadence.png}
+    \caption{Transient Simulation Domino \label{fig:p1_dominoCadence}}
+	\end{figure}
+
+  \begin{table}[H]
+    \centering
+    \caption{Propagation Delay Metrics for Various Logic Styles}
+    \begin{tabular}{lccc}
+      \hline
+      \textbf{Logic Style} & $t_{LH}$ (ps) & $t_{HL}$ (ps) & $t_{avg}$ (ps) \\
+      \hline
+      Static (4:4)  & 13.09 & 11.65 & 12.37 \\
+      Dynamic       & 8.001 & 1.674 & 4.837 \\
+      Domino (4:2)  & 9.598 & 7.747 & 8.673 \\
+      \hline
+    \end{tabular}
+    \label{tab:p1_metricsTable}
+  \end{table}
+
+  \begin{table}[H]
+    \centering
+    \caption{Switching Energy and Energy-Delay Product for Various Logic Styles}
+    \resizebox{\columnwidth}{!}{%
+    \begin{tabular}{lll}
+      \hline
+      \textbf{Logic Style} & \textbf{Switching Energy} & \textbf{Energy-Delay Product} \\
+      \hline
+      Static (4:4)  & $-2.77\,\text{fJ} \times 0.7 = -1.94\,\text{fJ}$   & $|-1.94\,\text{fJ}| \times 12.37\,\text{ps} = 24   \times 10^{-27}\,\mathrm{J \cdot s}$ \\
+      Dynamic       & $-297.5\,\text{aJ} \times 0.7 = -208.2\,\text{aJ}$ & $|-208.2\,\text{aJ}| \times 4.837\,\text{ps} = 1   \times 10^{-27}\,\mathrm{J \cdot s}$ \\
+      Domino (4:2)  & $-2.56\,\text{fJ} \times 0.7 = -1.792\,\text{fJ}$ & $|-1.792\,\text{fJ}| \times 8.673\,\text{ps} = 15.5 \times 10^{-27}\,\mathrm{J \cdot s}$ \\
+      \hline
+    \end{tabular}}
+    \label{tab:p1_energyTable}
+  \end{table}
+
+  When adding the output capacitances. The rising/falling times for Static and Domino logic got affected. This meant that in order to compensate a ratio of 4:4 and 4:2 for Static and Domino respectively. \\
+
+  This helped to reduce propagation delay in both High-to-Low and Low-to-High for static and domino. But this also affected the energy consumed. From Tables \ref{tab:p1_metricsTable} and \ref{tab:p1_energyTable} and from the simulations in Figures \ref{fig:p1_staticCadence}, 
+  \ref{fig:p1_dynamicCadence}, \ref{fig:p1_dominoCadence} it can clearly be seen that Dynamic Logic dominates in all metrics. It has the lowest average propagation delay (as well as in the individual $t_{HL}$ and $t_{LH}$). The next best type of logic is 
+  Domino following by Static.
+
+  The integral for the calculating the Switching Energy was done from 10ps to 110ps given that the clk period was of 100ps with a delay of 10ps at the input. 
+
+  \section*{Problem 2}
+
+  The circuit in Figure \ref{fig:p2_sch_mux} was used for \textbf{Problem 2}.
+  \begin{figure}[H]
+    \centering
+		\includegraphics[width=0.95\linewidth]{Images/mux_register_sch.png}
+    \caption{Mux Register Cadence schematic. \label{fig:p2_sch_mux}}
+	\end{figure}
+
+  \subsection*{i)}
+  In order to reduce propagation delay a ratio of 4P:2N width was chosen. This gave a propagation delay of $t_{CQ} = 9.305ps$ which is the average of $t_{HL} = 56.304ps-46ps = 10.3ps$ and $t_{LH} = 154.309ps - 146ps = 8.309ps$. 
+  The simulation displaying this results are in Figure \ref{fig:p2_pdelay}.
+
+  \begin{figure}[H]
+    \centering
+		\includegraphics[width=0.95\linewidth]{Images/propagation_delay.png}
+    \caption{Propagation delay. The values of interest are near the horizontal intercept. \label{fig:p2_pdelay}}
+	\end{figure}
+
+  \subsection*{ii)}
+
+  The graphs displaying failing and proper setup and hold time are Figures \ref{fig:p2_setup} and \ref{fig:p2_hold}. The approximations are shown in \ref{tab:p2_setup_hold}. The setup value means that if D arrives earlier than $30ps$ from the clock then $Q_M$ will get 
+  corrupted. And hold time means that if D changes later than $3ps$ from the clock then $Q_M$ will get corrupted as well.
+
+  \begin{figure}[H]
+    \centering
+		\includegraphics[width=0.45\linewidth]{Images/failing_setup_time.png}
+		\includegraphics[width=0.45\linewidth]{Images/proper_setup_time.png}
+    \caption{Graph displaying failing (left) and proper setup time (right). Values of interest near horizontal line. \label{fig:p2_setup}}
+	\end{figure}
+
+  \begin{figure}[H]
+    \centering
+		\includegraphics[width=0.45\linewidth]{Images/failing_hold_time.png}
+		\includegraphics[width=0.45\linewidth]{Images/proper_hold_time.png}
+    \caption{Graph displaying failing (left) and proper hold time (right). Values of interest near horizontal line. \label{fig:p2_hold}}
+	\end{figure}
+
+
+  \begin{table}[H]
+    \centering
+    \caption{Switching Energy and Energy-Delay Product for Various Logic Styles}
+    \resizebox{\columnwidth}{!}{%
+    \begin{tabular}{ll}
+      \hline
+      Setup Time & Hold time \\
+      \hline
+      $40ps - 10ps = 30ps$ & $45ps - 42ps = 3ps$ 
+    \end{tabular}}
+    \label{tab:p2_setup_hold}
+  \end{table}
+
+  \subsection*{iii) \& iv)}
+  To calculate switching energy and leakage the integral of the current was taken for a single clock cycle from $41ps$ to $141ps$ and from $101ps$ to $141ps$ respectively. The graph showing this cycle is in \ref{fig:p2_sw_leak}. The values obtained are in Table \ref{tab:p2_sw_leak}.
+  \begin{table}[H]
+    \centering
+    \caption{Switching Energy and Leakage}
+    \resizebox{\columnwidth}{!}{%
+    \begin{tabular}{ll}
+      \hline
+      Switching Energy & Leakage \\
+      \hline
+      $|-1.433e-15|\times0.7= 1.003fJ$ & $|-581.4e-18|\times0.7= 407aJ$ 
+    \end{tabular}}
+    \label{tab:p2_setup_hold}
+  \end{table}
+
+  \begin{figure}[H]
+    \centering
+		\includegraphics[width=0.95\linewidth]{Images/calculating_sw_leak.png}
+    \caption{Calculating Switching Energy and Leakage in clock period from $41ps$ to $141ps$. \label{fig:p2_sw_leak}}
+	\end{figure}
+
+  \subsection*{v)}
+  Lower Vdd and higher temperature causes the transistors to switch slower. Lower Vdd decreases $V_{OV}$ overdrive voltage, decreasing $I_{D}$, slowing down charging and discharging. Something similar happens with higher temperature, which reduces carrier
+  mobility, reducing also charging and discharging. So if the transistors switch slower, hold time and setup time increase. Meaning the transistors need more time to charge but there is also a wider window in which D can change before the clk. \\
+  The opposite happens with Increase of Vdd and lower temperatures. Setup and hold time reduce.
+  
+  An example can be seen in Figure \ref{fig:p2_less_vdd} where the setup time increased to $52ps$ and hold time to $5ps$.
+
+  \begin{figure}[H]
+    \centering
+\includegraphics[width=0.95\linewidth]{Images/lower_vdd_hold_fail.png}
+		\includegraphics[width=0.95\linewidth]{Images/lower_vdd_hold_proper.png}
+    \caption{Failing of hold time with lower Vdd (left). Proper hold time with lower Vdd (right).\label{fig:p2_less_vdd}}
+	\end{figure}
+
+  
+
+% (i) Minimize Clock→Q delay
+% (ii) Estimate Setup and Hold Time
+% (iii) Switching energy consumed in a clock cycle (total area under power supply current in a transient simulation during
+% a clock cycle × VDD)
+% (iv) Leakage power (total area under power supply current when clock is inactive × VDD )
+% (v) How does Setup and Hold Time change if you (a) raise or lower VDD (b) raise or lower T
 
 \end{document}
