@@ -8,6 +8,7 @@ verdi_config_file
 help_commands.txt
 Lab2/*.txt
 Lab3/*.txt
+Lab5/*.txt
 *.swp
 Hw2/*.txt
 *.synctex.gz.sum.synctex

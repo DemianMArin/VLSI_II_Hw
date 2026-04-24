@@ -1,0 +1,191 @@
+module counter_tb();
+
+logic       clk;
+
+// length=10 signals
+logic        cen10, ld10, u_d10;
+logic [9:0]  d_in10, q10;
+logic        cout10;
+
+// length=5 signals
+logic        cen5, ld5, u_d5;
+logic [4:0]  d_in5, q5;
+logic        cout5;
+
+counter #(.length(10)) DUT10 (
+    .clk(clk), .cen(cen10), .ld(ld10), .u_d(u_d10),
+    .d_in(d_in10), .q(q10), .cout(cout10)
+);
+
+counter #(.length(5)) DUT5 (
+    .clk(clk), .cen(cen5), .ld(ld5), .u_d(u_d5),
+    .d_in(d_in5), .q(q5), .cout(cout5)
+);
+
+initial clk = 0;
+always #5 clk = ~clk;
+
+// initial begin: fsdb_dump
+//   $fsdbDumpfile("dump.fsdb");
+//   $fsdbDumpvars;
+// end: fsdb_dump
+
+initial begin: testbench
+
+  cen10 = 0; ld10 = 0; u_d10 = 0; d_in10 = '0;
+  cen5  = 0; ld5  = 0; u_d5  = 0; d_in5  = '0;
+
+  // ===== length=10 =====
+
+  // 1. Load
+  cen10 = 1; ld10 = 1; d_in10 = 10'h155;
+  @(posedge clk); #1;
+  if (q10 !== 10'h155) begin
+    $display("@@@FAIL: length=10 load");
+    $finish;
+  end
+
+  // 2. cen=0: counter must not change
+  ld10 = 0; cen10 = 0; u_d10 = 1;
+  @(posedge clk); #1;
+  if (q10 !== 10'h155) begin
+    $display("@@@FAIL: length=10 cen=0");
+    $finish;
+  end
+
+  // 3. Count up
+  cen10 = 1;
+  @(posedge clk); #1;
+  if (q10 !== 10'h156) begin
+    $display("@@@FAIL: length=10 count up step 1");
+    $finish;
+  end
+  @(posedge clk); #1;
+  if (q10 !== 10'h157) begin
+    $display("@@@FAIL: length=10 count up step 2");
+    $finish;
+  end
+
+  // 4. Count down
+  u_d10 = 0;
+  @(posedge clk); #1;
+  if (q10 !== 10'h156) begin
+    $display("@@@FAIL: length=10 count down step 1");
+    $finish;
+  end
+  @(posedge clk); #1;
+  if (q10 !== 10'h155) begin
+    $display("@@@FAIL: length=10 count down step 2");
+    $finish;
+  end
+
+  // 5. Overflow: load to max, verify cout=1, then roll over to 0
+  ld10 = 1; d_in10 = 10'h3FF; u_d10 = 1;
+  @(posedge clk); #1;
+  if (q10 !== 10'h3FF || cout10 !== 1) begin
+    $display("@@@FAIL: length=10 overflow detect");
+    $finish;
+  end
+  ld10 = 0;
+  @(posedge clk); #1;
+  if (q10 !== 10'h000 || cout10 !== 0) begin
+    $display("@@@FAIL: length=10 overflow rollover");
+    $finish;
+  end
+
+  // 6. Underflow: load to 0, verify cout=1, then roll over to max
+  ld10 = 1; d_in10 = 10'h000; u_d10 = 0;
+  @(posedge clk); #1;
+  if (q10 !== 10'h000 || cout10 !== 1) begin
+    $display("@@@FAIL: length=10 underflow detect");
+    $finish;
+  end
+  ld10 = 0;
+  @(posedge clk); #1;
+  if (q10 !== 10'h3FF || cout10 !== 0) begin
+    $display("@@@FAIL: length=10 underflow rollover");
+    $finish;
+  end
+
+  // ===== length=5 =====
+
+  // 1. Load
+  cen5 = 1; ld5 = 1; d_in5 = 5'h0A;
+  @(posedge clk); #1;
+  if (q5 !== 5'h0A) begin
+    $display("@@@FAIL: length=5 load");
+    $finish;
+  end
+
+  // 2. cen=0: counter must not change
+  ld5 = 0; cen5 = 0; u_d5 = 1;
+  @(posedge clk); #1;
+  if (q5 !== 5'h0A) begin
+    $display("@@@FAIL: length=5 cen=0");
+    $finish;
+  end
+
+  // 3. Count up
+  cen5 = 1;
+  @(posedge clk); #1;
+  if (q5 !== 5'h0B) begin
+    $display("@@@FAIL: length=5 count up step 1");
+    $finish;
+  end
+  @(posedge clk); #1;
+  if (q5 !== 5'h0C) begin
+    $display("@@@FAIL: length=5 count up step 2");
+    $finish;
+  end
+
+  // 4. Count down
+  u_d5 = 0;
+  @(posedge clk); #1;
+  if (q5 !== 5'h0B) begin
+    $display("@@@FAIL: length=5 count down step 1");
+    $finish;
+  end
+  @(posedge clk); #1;
+  if (q5 !== 5'h0A) begin
+    $display("@@@FAIL: length=5 count down step 2");
+    $finish;
+  end
+
+  // 5. Overflow: load to max, verify cout=1, then roll over to 0
+  ld5 = 1; d_in5 = 5'h1F; u_d5 = 1;
+  @(posedge clk); #1;
+  if (q5 !== 5'h1F || cout5 !== 1) begin
+    $display("@@@FAIL: length=5 overflow detect");
+    $finish;
+  end
+  ld5 = 0;
+  @(posedge clk); #1;
+  if (q5 !== 5'h00 || cout5 !== 0) begin
+    $display("@@@FAIL: length=5 overflow rollover");
+    $finish;
+  end
+
+  // 6. Underflow: load to 0, verify cout=1, then roll over to max
+  ld5 = 1; d_in5 = 5'h00; u_d5 = 0;
+  @(posedge clk); #1;
+  if (q5 !== 5'h00 || cout5 !== 1) begin
+    $display("@@@FAIL: length=5 underflow detect");
+    $finish;
+  end
+  ld5 = 0;
+  @(posedge clk); #1;
+  if (q5 !== 5'h1F || cout5 !== 0) begin
+    $display("@@@FAIL: length=5 underflow rollover");
+    $finish;
+  end
+
+  $display("@@@PASS");
+  $finish;
+end: testbench
+
+initial begin: monitor
+  $monitor("%t clk:%b | q10:%h cout10:%b | q5:%h cout5:%b",
+           $realtime, clk, q10, cout10, q5, cout5);
+end: monitor
+
+endmodule: counter_tb

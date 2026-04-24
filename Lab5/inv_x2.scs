@@ -1,0 +1,48 @@
+// Generated for: spectre
+// Generated on: Apr 13 18:22:57 2026
+// Design library name: ece6443lib
+// Design cell name: inv_x1_tb
+// Design view name: schematic
+simulator lang=spectre
+global 0
+parameters vin=0 vdd=1 vss=0
+include "/ALL_PDK/gpdk045_v_6_0/gpdk045/../models/spectre/gpdk045.scs" section=mc
+
+// Library name: ece6443lib
+// Cell name: inv_x1
+// View name: schematic
+subckt inv_x1 In Out Vdd Vss
+    NM0 (Out In Vss Vss) g45n1svt w=(240n) l=45n nf=1 as=33.6f ad=33.6f \
+        ps=760n pd=760n nrd=583.333m nrs=583.333m sa=140n sb=140n sd=160n \
+        sca=151.92744 scb=0.10471 scc=0.01874 m=(1)
+    PM0 (Out In Vdd Vdd) g45p1svt w=(480n) l=45n nf=1 as=67.2f ad=67.2f \
+        ps=1.24u pd=1.24u nrd=291.667m nrs=291.667m sa=140n sb=140n \
+        sd=160n sca=102.54472 scb=0.08351 scc=0.01219 m=(1)
+ends inv_x1
+// End of subcircuit definition.
+
+// Library name: ece6443lib
+// Cell name: inv_x1_tb
+// View name: schematic
+I0 (IN OUT Vdd Vss) inv_x1
+V2 (Vss 0) vsource dc=vss type=dc
+V1 (Vdd 0) vsource dc=vdd type=dc
+V8 (IN 0) vsource dc=vdd type=pulse val0=1 val1=0 period=1u rise=5p \
+        fall=5p width=500n
+C0 (OUT 0) capacitor c=2f
+simulatorOptions options psfversion="1.4.0" reltol=1e-3 vabstol=1e-6 \
+    iabstol=1e-12 temp=27 tnom=27 scalem=1.0 scale=1.0 gmin=1e-12 rforce=1 \
+    maxnotes=5 maxwarns=5 digits=5 cols=80 pivrel=1e-3 \
+    sensfile="../psf/sens.output" checklimitdest=psf 
+tran tran stop=10u step=0.001u write="spectre.ic" writefinal="spectre.fc" \
+    annotate=status maxiters=5 
+finalTimeOP info what=oppoint where=rawfile
+dcOp dc write="spectre.dc" maxiters=150 maxsteps=10000 annotate=status
+dcOpInfo info what=oppoint where=rawfile
+modelParameter info what=models where=rawfile
+element info what=inst where=rawfile
+outputParameter info what=output where=rawfile
+designParamVals info what=parameters where=rawfile
+primitives info what=primitives where=rawfile
+subckts info what=subckts where=rawfile
+saveOptions options save=allpub pwr=all currents=all
