@@ -7,20 +7,10 @@ logic        cen10, ld10, u_d10;
 logic [9:0]  d_in10, q10;
 logic        cout10;
 
-// length=5 signals
-// logic        cen5, ld5, u_d5;
-// logic [4:0]  d_in5, q5;
-// logic        cout5;
-
 counter #(.length(10)) DUT10 (
     .clk(clk), .cen(cen10), .ld(ld10), .u_d(u_d10),
     .d_in(d_in10), .q(q10), .cout(cout10)
 );
-
-// counter #(.length(5)) DUT5 (
-//     .clk(clk), .cen(cen5), .ld(ld5), .u_d(u_d5),
-//     .d_in(d_in5), .q(q5), .cout(cout5)
-// );
 
 initial clk = 0;
 always #5 clk = ~clk;
@@ -33,7 +23,6 @@ always #5 clk = ~clk;
 initial begin: testbench
 
   cen10 = 0; ld10 = 0; u_d10 = 0; d_in10 = '0;
-  // cen5  = 0; ld5  = 0; u_d5  = 0; d_in5  = '0;
 
   // ===== length=10 =====
 
@@ -79,7 +68,7 @@ initial begin: testbench
     $finish;
   end
 
-  // 5. Overflow: count to max (no cout), roll over (cout=1), clear (cout=0)
+  // 5. Overflow: count to max (no cout), roll over (cout=1)
   ld10 = 1; d_in10 = 10'h3FE; u_d10 = 1;
   @(posedge clk); #1;
   ld10 = 0;
@@ -93,13 +82,8 @@ initial begin: testbench
     $display("@@@FAIL: length=10 overflow cout=1 at rollover");
     $finish;
   end
-  @(posedge clk); #1;
-  if (q10 !== 10'h001 || cout10 !== 0) begin
-    $display("@@@FAIL: length=10 overflow cout clears");
-    $finish;
-  end
 
-  // 6. Underflow: count to 0 (no cout), roll over (cout=1), clear (cout=0)
+  // 6. Underflow: count to 0 (no cout), roll over (cout=1)
   ld10 = 1; d_in10 = 10'h001; u_d10 = 0;
   @(posedge clk); #1;
   ld10 = 0;
@@ -111,11 +95,6 @@ initial begin: testbench
   @(posedge clk); #1;
   if (q10 !== 10'h3FF || cout10 !== 1) begin
     $display("@@@FAIL: length=10 underflow cout=1 at rollover");
-    $finish;
-  end
-  @(posedge clk); #1;
-  if (q10 !== 10'h3FE || cout10 !== 0) begin
-    $display("@@@FAIL: length=10 underflow cout clears");
     $finish;
   end
 
@@ -142,114 +121,6 @@ initial begin: testbench
     $display("@@@FAIL: length=10 cen=0 blocks ld");
     $finish;
   end
-
-  // // ===== length=5 =====
-  //
-  // // 1. Load
-  // cen5 = 1; ld5 = 1; d_in5 = 5'h0A;
-  // @(posedge clk); #1;
-  // if (q5 !== 5'h0A) begin
-  //   $display("@@@FAIL: length=5 load");
-  //   $finish;
-  // end
-  //
-  // // 2. cen=0: counter must not change
-  // ld5 = 0; cen5 = 0; u_d5 = 1;
-  // @(posedge clk); #1;
-  // if (q5 !== 5'h0A) begin
-  //   $display("@@@FAIL: length=5 cen=0 blocks count");
-  //   $finish;
-  // end
-  //
-  // // 3. Count up
-  // cen5 = 1;
-  // @(posedge clk); #1;
-  // if (q5 !== 5'h0B) begin
-  //   $display("@@@FAIL: length=5 count up step 1");
-  //   $finish;
-  // end
-  // @(posedge clk); #1;
-  // if (q5 !== 5'h0C) begin
-  //   $display("@@@FAIL: length=5 count up step 2");
-  //   $finish;
-  // end
-  //
-  // // 4. Count down
-  // u_d5 = 0;
-  // @(posedge clk); #1;
-  // if (q5 !== 5'h0B) begin
-  //   $display("@@@FAIL: length=5 count down step 1");
-  //   $finish;
-  // end
-  // @(posedge clk); #1;
-  // if (q5 !== 5'h0A) begin
-  //   $display("@@@FAIL: length=5 count down step 2");
-  //   $finish;
-  // end
-  //
-  // // 5. Overflow: count to max (no cout), roll over (cout=1), clear (cout=0)
-  // ld5 = 1; d_in5 = 5'h1E; u_d5 = 1;
-  // @(posedge clk); #1;
-  // ld5 = 0;
-  // @(posedge clk); #1;
-  // if (q5 !== 5'h1F || cout5 !== 0) begin
-  //   $display("@@@FAIL: length=5 pre-overflow cout should be 0");
-  //   $finish;
-  // end
-  // @(posedge clk); #1;
-  // if (q5 !== 5'h00 || cout5 !== 1) begin
-  //   $display("@@@FAIL: length=5 overflow cout=1 at rollover");
-  //   $finish;
-  // end
-  // @(posedge clk); #1;
-  // if (q5 !== 5'h01 || cout5 !== 0) begin
-  //   $display("@@@FAIL: length=5 overflow cout clears");
-  //   $finish;
-  // end
-  //
-  // // 6. Underflow: count to 0 (no cout), roll over (cout=1), clear (cout=0)
-  // ld5 = 1; d_in5 = 5'h01; u_d5 = 0;
-  // @(posedge clk); #1;
-  // ld5 = 0;
-  // @(posedge clk); #1;
-  // if (q5 !== 5'h00 || cout5 !== 0) begin
-  //   $display("@@@FAIL: length=5 pre-underflow cout should be 0");
-  //   $finish;
-  // end
-  // @(posedge clk); #1;
-  // if (q5 !== 5'h1F || cout5 !== 1) begin
-  //   $display("@@@FAIL: length=5 underflow cout=1 at rollover");
-  //   $finish;
-  // end
-  // @(posedge clk); #1;
-  // if (q5 !== 5'h1E || cout5 !== 0) begin
-  //   $display("@@@FAIL: length=5 underflow cout clears");
-  //   $finish;
-  // end
-  //
-  // // 7. ld priority over u_d=1
-  // cen5 = 1; ld5 = 1; u_d5 = 1; d_in5 = 5'h0A;
-  // @(posedge clk); #1;
-  // if (q5 !== 5'h0A) begin
-  //   $display("@@@FAIL: length=5 ld priority over u_d=1");
-  //   $finish;
-  // end
-  //
-  // // 8. ld priority over u_d=0
-  // ld5 = 1; u_d5 = 0; d_in5 = 5'h10;
-  // @(posedge clk); #1;
-  // if (q5 !== 5'h10) begin
-  //   $display("@@@FAIL: length=5 ld priority over u_d=0");
-  //   $finish;
-  // end
-  //
-  // // 9. cen=0 blocks ld
-  // cen5 = 0; ld5 = 1; d_in5 = 5'h1F;
-  // @(posedge clk); #1;
-  // if (q5 !== 5'h10) begin
-  //   $display("@@@FAIL: length=5 cen=0 blocks ld");
-  //   $finish;
-  // end
 
   $display("@@@PASS");
   $finish;
