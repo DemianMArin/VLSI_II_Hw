@@ -9,6 +9,8 @@ help_commands.txt
 Lab2/*.txt
 Lab3/*.txt
 Lab5/*.txt
+Project/*.txt
+Project/tb_counter_reference.sv
 *.swp
 Hw2/*.txt
 *.synctex.gz.sum.synctex

@@ -19,6 +19,7 @@ module counter #(parameter length = 10) (
         end
     end
 
-    assign cout = (u_d) ? (&q) : (~|q);
+    // assign cout = (u_d) ? (&q) : (~|q);  // fires before rollover (wrong)
+    assign cout = (u_d) ? (~|q) : (&q);
 
 endmodule

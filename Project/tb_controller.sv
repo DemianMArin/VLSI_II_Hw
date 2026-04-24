@@ -45,7 +45,19 @@ initial begin: testbench
     $finish;
   end
 
-  // 4. TEST + cout=0: must stay in TEST
+  // 4. rst=1 from TEST state: must go back to RESET
+  start = 0; rst = 1;
+  @(posedge clk); #1;
+  if (ld !== 1 || NbarT !== 0) begin
+    $display("@@@FAIL: rst from TEST should go to RESET");
+    $finish;
+  end
+
+  // re-enter TEST for remaining cases
+  rst = 0; start = 1;
+  @(posedge clk); #1;
+
+  // 5. TEST + cout=0: must stay in TEST
   start = 0; cout = 0;
   @(posedge clk); #1;
   if (NbarT !== 1 || ld !== 0) begin
