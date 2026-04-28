@@ -1,4 +1,10 @@
-create_clock -period 120.0 -name clk [get_ports clk]
+set lib_name saed32lvt_ss0p75v125c
+current_design bist 
+
+# Reset all constraints
+reset_design
+
+create_clock -period 1.6 -name clk [get_ports clk]
 set_input_delay 0.1 -clock clk [all_inputs]
 set_output_delay 0.15 -clock clk [all_outputs]
 set_load 0.1 [all_outputs]
@@ -6,5 +12,6 @@ set_max_fanout 1 [all_inputs]
 set_fanout_load 8 [all_outputs]
 set_clock_uncertainty .01 [all_clocks ]
 set_clock_latency 0.01 -source [get_ports clk]
+
 
 

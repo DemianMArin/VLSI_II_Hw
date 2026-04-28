@@ -24,7 +24,7 @@ initial begin: testbench
     // --- Basic write then read (addr 53 = 0xDE) ---
     cs = 1; rwbar = 0; ramaddr = 53; ramin = 8'hDE;
     @(posedge clk); #1;
-    rwbar = 1;
+    rwbar = 1; #1;
     if (ramout !== 8'hDE) begin
         $display("@@@FAIL: read after write, expected 0xDE, got 0x%h", ramout);
         $finish;
